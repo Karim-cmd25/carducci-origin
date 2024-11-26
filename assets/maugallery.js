@@ -241,10 +241,10 @@
       }
 
       // Retirer la classe active de tous les éléments, y compris le bouton "Tous"
-      $(".active-tag").removeClass("active-tag").css("background-color", "");
+      $(".active-tag").removeClass("active-tag");
 
-      // Ajouter la classe active au tag cliqué et lui appliquer le fond doré
-      $(this).addClass("active-tag").css("background-color", "gold");
+      // Ajouter la classe active au tag cliqué (le style doré sera appliqué via CSS)
+      $(this).addClass("active-tag");
 
       var tag = $(this).data("images-toggle");
 
