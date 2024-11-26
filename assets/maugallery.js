@@ -123,74 +123,73 @@
     },
 
     prevImage() {
-      let activeImage = $(".lightboxImage").attr("src"); // Image actuellement affichée
-      let activeTag = $(".tags-bar span.active-tag").data("images-toggle"); // Tag actif
+      let activeImage = null;
+      $("img.gallery-item").each(function () {
+        if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
+          activeImage = $(this);
+        }
+      });
+      let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
       let imagesCollection = [];
-
-      // Récupération des images visibles en fonction du tag actif
       if (activeTag === "all") {
-        $(".item-column img").each(function () {
-          imagesCollection.push($(this));
+        $(".item-column").each(function () {
+          if ($(this).children("img").length) {
+            imagesCollection.push($(this).children("img"));
+          }
         });
       } else {
-        $(".item-column img").each(function () {
-          if ($(this).data("gallery-tag") === activeTag) {
-            imagesCollection.push($(this));
+        $(".item-column").each(function () {
+          if ($(this).children("img").data("gallery-tag") === activeTag) {
+            imagesCollection.push($(this).children("img"));
           }
         });
       }
+      let index = 0,
+        next = null;
 
-      // Trouver l'index de l'image active
-      let index = imagesCollection.findIndex(
-        (img) => $(img).attr("src") === activeImage
-      );
-      // Si l'index est > 0, afficher l'image précédente
-      if (index > 0) {
-        $(".lightboxImage").attr(
-          "src",
-          $(imagesCollection[index - 1]).attr("src")
-        );
-      } else {
-        // Si index est 0, afficher la dernière image
-        $(".lightboxImage").attr(
-          "src",
-          $(imagesCollection[imagesCollection.length - 1]).attr("src")
-        );
-      }
+      $(imagesCollection).each(function (i) {
+        if ($(activeImage).attr("src") === $(this).attr("src")) {
+          index = i;
+        }
+      });
+      next =
+        imagesCollection[index] ||
+        imagesCollection[imagesCollection.length - 1];
+      $(".lightboxImage").attr("src", $(next).attr("src"));
     },
 
     nextImage() {
-      let activeImage = $(".lightboxImage").attr("src"); // Image actuellement affichée
-      let activeTag = $(".tags-bar span.active-tag").data("images-toggle"); // Tag actif
+      let activeImage = null;
+      $("img.gallery-item").each(function () {
+        if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
+          activeImage = $(this);
+        }
+      });
+      let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
       let imagesCollection = [];
-
-      // Récupération des images visibles en fonction du tag actif
       if (activeTag === "all") {
-        $(".item-column img").each(function () {
-          imagesCollection.push($(this));
+        $(".item-column").each(function () {
+          if ($(this).children("img").length) {
+            imagesCollection.push($(this).children("img"));
+          }
         });
       } else {
-        $(".item-column img").each(function () {
-          if ($(this).data("gallery-tag") === activeTag) {
-            imagesCollection.push($(this));
+        $(".item-column").each(function () {
+          if ($(this).children("img").data("gallery-tag") === activeTag) {
+            imagesCollection.push($(this).children("img"));
           }
         });
       }
+      let index = 0,
+        next = null;
 
-      // Trouver l'index de l'image active
-      let index = imagesCollection.findIndex(
-        (img) => $(img).attr("src") === activeImage
-      );
-      // Si l'index est < imagesCollection.length - 1, afficher l'image suivante
-      if (index < imagesCollection.length - 1) {
-        $(".lightboxImage").attr(
-          "src",
-          $(imagesCollection[index + 1]).attr("src")
-        );
-      } else {
-        // Sinon, afficher la première image
-        $(".lightboxImage").attr("src", $(imagesCollection[0]).attr("src"));
-      }
+      $(imagesCollection).each(function (i) {
+        if ($(activeImage).attr("src") === $(this).attr("src")) {
+          index = i;
+        }
+      });
+      next = imagesCollection[index] || imagesCollection[0];
+      $(".lightboxImage").attr("src", $(next).attr("src"));
     },
 
     createLightBox(gallery, lightboxId, navigation) {
@@ -236,39 +235,30 @@
     },
 
     filterByTag() {
+      // Si l'élément cliqué est déjà actif, ne rien faire
       if ($(this).hasClass("active-tag")) {
-        return; // Si le tag est déjà actif, ne rien faire
+        return;
       }
 
-      // Retirer la classe active de l'ancien élément et réinitialiser le fond
+      // Retirer la classe active de tous les éléments, y compris le bouton "Tous"
       $(".active-tag").removeClass("active-tag").css("background-color", "");
 
-      // Ajouter la classe active au nouveau tag sélectionné et changer son fond
+      // Ajouter la classe active au tag cliqué et lui appliquer le fond doré
       $(this).addClass("active-tag").css("background-color", "gold");
 
       var tag = $(this).data("images-toggle");
 
       // Afficher ou masquer les images en fonction du tag sélectionné
       $(".gallery-item").each(function () {
-        $(this).parents(".item-column").hide();
+        $(this).parents(".item-column").hide(); // Masquer toutes les images par défaut
         if (tag === "all") {
-          $(this).parents(".item-column").show(300); // Afficher toutes les images
+          // Si "Tous" est sélectionné, afficher toutes les images
+          $(this).parents(".item-column").show(300);
         } else if ($(this).data("gallery-tag") === tag) {
-          $(this).parents(".item-column").show(300); // Afficher les images avec le tag sélectionné
+          // Sinon, afficher les images du tag sélectionné
+          $(this).parents(".item-column").show(300);
         }
       });
     },
   };
-
-  // Ajouter le CSS pour le fond doré à la catégorie active
-  $("<style>")
-    .prop("type", "text/css")
-    .html(
-      `
-      .nav-link.active-tag {
-        background-color: gold !important; /* Appliquer un fond doré à l'élément actif */
-      }
-    `
-    )
-    .appendTo("head");
 })(jQuery);
