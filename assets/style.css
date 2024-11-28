@@ -92,6 +92,11 @@ body {
 #gallery {
   /*    min-height: 100vh; */
 }
+
+.nav-pills .nav-link.active {
+  background-color: none;
+}
+
 .title {
   text-align: center;
   padding-block: 2em;
