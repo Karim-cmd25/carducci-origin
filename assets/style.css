@@ -90,7 +90,7 @@ body {
 }
 
 #gallery {
-  /*	min-height: 100vh; */
+  /*    min-height: 100vh; */
 }
 .title {
   text-align: center;
@@ -108,13 +108,6 @@ body {
 .nav-pills .nav-link {
   color: #000;
 }
-
-/* Nouvelle classe active pour les tags de filtre */
-.nav-pills .nav-link.active-tag {
-  background-color: #beb45a !important;
-  color: black !important;
-}
-
 .item-column {
   position: relative;
   margin-bottom: 0 !important;
