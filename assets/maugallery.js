@@ -202,16 +202,17 @@
         return;
       }
 
-      // Retirer la classe active de tous les éléments, y compris le bouton "Tous"
+      // Retirer la classe active-tag de tous les éléments et réinitialiser le fond
       $(".active-tag").removeClass("active-tag").css("background-color", "");
 
-      // Ajouter la classe active au tag cliqué et lui appliquer le fond doré
+      // Ajouter la classe active-tag et appliquer le fond doré sur l'élément cliqué
       $(this).addClass("active-tag").css("background-color", "#beb45a");
 
       var tag = $(this).data("images-toggle");
 
       $(".gallery-item").each(function () {
         $(this).parents(".item-column").hide(); // Masquer toutes les images par défaut
+
         if (tag === "all") {
           // Si "Tous" est sélectionné, afficher toutes les images
           $(this).parents(".item-column").show(300);
