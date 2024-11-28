@@ -206,7 +206,7 @@
       $(".active-tag").removeClass("active-tag").css("background-color", "");
 
       // Ajouter la classe active au tag cliqué et lui appliquer le fond doré
-      $(this).addClass("active-tag").css("background-color", "gold");
+      $(this).addClass("active-tag").css("background-color", "#beb45a");
 
       var tag = $(this).data("images-toggle");
 
