@@ -93,7 +93,8 @@ body {
   /*    min-height: 100vh; */
 }
 
-.nav-pills .nav-link.active {
+nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
   background-color: none !important;
 }
 
