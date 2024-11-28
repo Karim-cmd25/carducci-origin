@@ -180,10 +180,10 @@
 
     showItemTags(gallery, position, tags) {
       var tagItems =
-        '<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>';
+        '<li class="nav-item"><span class="nav-link active active-tag" data-images-toggle="all">Tous</span></li>';
       $.each(tags, function (index, value) {
         tagItems += `<li class="nav-item">
-                <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
+                <span class="nav-link" data-images-toggle="${value}">${value}</span></li>`;
       });
       var tagsRow = `<ul class="my-4 tags-bar nav nav-pills">${tagItems}</ul>`;
 
@@ -202,17 +202,16 @@
         return;
       }
 
-      // Retirer la classe active-tag de tous les éléments et réinitialiser le fond
+      // Retirer la classe active de tous les éléments, y compris le bouton "Tous"
       $(".active-tag").removeClass("active-tag").css("background-color", "");
 
-      // Ajouter la classe active-tag et appliquer le fond doré sur l'élément cliqué
+      // Ajouter la classe active au tag cliqué et lui appliquer le fond doré
       $(this).addClass("active-tag").css("background-color", "#beb45a");
 
       var tag = $(this).data("images-toggle");
 
       $(".gallery-item").each(function () {
         $(this).parents(".item-column").hide(); // Masquer toutes les images par défaut
-
         if (tag === "all") {
           // Si "Tous" est sélectionné, afficher toutes les images
           $(this).parents(".item-column").show(300);
