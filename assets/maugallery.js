@@ -40,7 +40,6 @@
       $(this).fadeIn(500);
     });
   };
-
   $.fn.mauGallery.defaults = {
     columns: 3,
     lightBox: true,
@@ -49,7 +48,6 @@
     tagsPosition: "bottom",
     navigation: true,
   };
-
   $.fn.mauGallery.listeners = function (options) {
     $(".gallery-item").on("click", function () {
       if (options.lightBox && $(this).prop("tagName") === "IMG") {
@@ -67,14 +65,12 @@
       $.fn.mauGallery.methods.nextImage(options.lightboxId)
     );
   };
-
   $.fn.mauGallery.methods = {
     createRowWrapper(element) {
       if (!element.children().first().hasClass("row")) {
         element.append('<div class="gallery-items-row row"></div>');
       }
     },
-
     wrapItemInColumn(element, columns) {
       if (columns.constructor === Number) {
         element.wrap(
@@ -104,56 +100,88 @@
         );
       }
     },
-
     moveItemInRowWrapper(element) {
       element.appendTo(".gallery-items-row");
     },
-
     responsiveImageItem(element) {
       if (element.prop("tagName") === "IMG") {
         element.addClass("img-fluid");
       }
     },
-
     openLightBox(element, lightboxId) {
       $(`#${lightboxId}`)
         .find(".lightboxImage")
         .attr("src", element.attr("src"));
       $(`#${lightboxId}`).modal("toggle");
     },
-
     prevImage() {
-      let activeImage = $(".gallery-item.active");
-      let imagesCollection = $(".gallery-item");
-      let index = imagesCollection.index(activeImage);
-      if (index === 0) {
-        index = imagesCollection.length - 1;
+      let activeImage = null;
+      $("img.gallery-item").each(function () {
+        if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
+          activeImage = $(this);
+        }
+      });
+      let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
+      let imagesCollection = [];
+      if (activeTag === "all") {
+        $(".item-column").each(function () {
+          if ($(this).children("img").length) {
+            imagesCollection.push($(this).children("img"));
+          }
+        });
       } else {
-        index--;
+        $(".item-column").each(function () {
+          if ($(this).children("img").data("gallery-tag") === activeTag) {
+            imagesCollection.push($(this).children("img"));
+          }
+        });
       }
+      let index = 0,
+        next = null;
 
-      let prevImage = $(imagesCollection[index]);
-      $(".lightboxImage").attr("src", prevImage.attr("src"));
-      $(".gallery-item").removeClass("active");
-      prevImage.addClass("active");
+      $(imagesCollection).each(function (i) {
+        if ($(activeImage).attr("src") === $(this).attr("src")) {
+          index = i - 1;
+        }
+      });
+      next =
+        imagesCollection[index] ||
+        imagesCollection[imagesCollection.length - 1];
+      $(".lightboxImage").attr("src", $(next).attr("src"));
     },
-
     nextImage() {
-      let activeImage = $(".gallery-item.active");
-      let imagesCollection = $(".gallery-item");
-      let index = imagesCollection.index(activeImage);
-      if (index === imagesCollection.length - 1) {
-        index = 0;
+      let activeImage = null;
+      $("img.gallery-item").each(function () {
+        if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
+          activeImage = $(this);
+        }
+      });
+      let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
+      let imagesCollection = [];
+      if (activeTag === "all") {
+        $(".item-column").each(function () {
+          if ($(this).children("img").length) {
+            imagesCollection.push($(this).children("img"));
+          }
+        });
       } else {
-        index++;
+        $(".item-column").each(function () {
+          if ($(this).children("img").data("gallery-tag") === activeTag) {
+            imagesCollection.push($(this).children("img"));
+          }
+        });
       }
+      let index = 0,
+        next = null;
 
-      let nextImage = $(imagesCollection[index]);
-      $(".lightboxImage").attr("src", nextImage.attr("src"));
-      $(".gallery-item").removeClass("active");
-      nextImage.addClass("active");
+      $(imagesCollection).each(function (i) {
+        if ($(activeImage).attr("src") === $(this).attr("src")) {
+          index = i + 1;
+        }
+      });
+      next = imagesCollection[index] || imagesCollection[0];
+      $(".lightboxImage").attr("src", $(next).attr("src"));
     },
-
     createLightBox(gallery, lightboxId, navigation) {
       gallery.append(`<div class="modal fade" id="${
         lightboxId ? lightboxId : "galleryLightbox"
@@ -177,13 +205,12 @@
                 </div>
             </div>`);
     },
-
     showItemTags(gallery, position, tags) {
       var tagItems =
-        '<li class="nav-item"><span class="nav-link active active-tag" data-images-toggle="all">Tous</span></li>';
+        '<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>';
       $.each(tags, function (index, value) {
-        tagItems += `<li class="nav-item">
-                <span class="nav-link" data-images-toggle="${value}">${value}</span></li>`;
+        tagItems += `<li class="nav-item active">
+                <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
       });
       var tagsRow = `<ul class="my-4 tags-bar nav nav-pills">${tagItems}</ul>`;
 
@@ -195,28 +222,20 @@
         console.error(`Unknown tags position: ${position}`);
       }
     },
-
     filterByTag() {
-      // Si l'élément cliqué est déjà actif, ne rien faire
       if ($(this).hasClass("active-tag")) {
         return;
       }
-
-      // Retirer la classe active de tous les éléments, y compris le bouton "Tous"
-      $(".active-tag").removeClass("active-tag").css("background-color", "");
-
-      // Ajouter la classe active au tag cliqué et lui appliquer le fond doré
-      $(this).addClass("active-tag").css("background-color", "#beb45a");
+      $(".active-tag").removeClass("active active-tag");
+      $(this).addClass("active-tag");
 
       var tag = $(this).data("images-toggle");
 
       $(".gallery-item").each(function () {
-        $(this).parents(".item-column").hide(); // Masquer toutes les images par défaut
+        $(this).parents(".item-column").hide();
         if (tag === "all") {
-          // Si "Tous" est sélectionné, afficher toutes les images
           $(this).parents(".item-column").show(300);
         } else if ($(this).data("gallery-tag") === tag) {
-          // Sinon, afficher les images du tag sélectionné
           $(this).parents(".item-column").show(300);
         }
       });
