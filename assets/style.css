@@ -353,13 +353,8 @@ input[type="submit"] {
   .picture {
     width: 80%;
   }
+
   .nav-pills .nav-link.active-tag {
-	background-color: #beb45a !important;  /* Applique le fond doré */
-
-
-
-
-
-
-
+    background-color: #beb45a !important; /* Applique le fond doré */
+  }
 }
