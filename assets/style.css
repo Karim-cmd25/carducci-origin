@@ -162,7 +162,7 @@ body {
 }
 #services .container::before {
   content: " ";
-  background-color: #1c6474;
+
   position: absolute;
   width: 100%;
   height: 30%;
